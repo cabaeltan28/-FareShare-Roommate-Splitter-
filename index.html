@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>FareShare 🛒</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,41 +14,33 @@
 
 <div class="container">
 
-  <!-- Input Section -->
+
   <div class="input-group">
-    <input type="text" id="itemName" placeholder="Item (e.g. Milk)">
+    <input type="text" id="membersInput"
+      placeholder="Enter members separated by comma">
+    <button onclick="setMembers()">Set Members</button>
+  </div>
+
+ 
+  <div class="input-group">
+    <input type="text" id="itemName" placeholder="Item">
     <input type="number" id="itemPrice" placeholder="Price">
   </div>
 
   <div class="input-group">
-    <select id="itemType">
-      <option value="shared">Shared (50/50)</option>
-      <option value="chris">Chris only</option>
-      <option value="pat">Pat only</option>
-    </select>
+    <select id="itemType"></select>
     <button onclick="addItem()">Add</button>
   </div>
 
-  <!-- Receipt -->
+ 
   <div class="receipt">
     <h3>🧾 Receipt</h3>
+
     <div id="items"></div>
 
-    <div class="columns">
-      <div class="col">
-        <h3>Chris</h3>
-        <div id="chrisList"></div>
-      </div>
-      <div class="col">
-        <h3>Pat</h3>
-        <div id="patList"></div>
-      </div>
-    </div>
+    <div class="columns" id="memberColumns"></div>
 
-    <div class="totals">
-      <div>Chris: $<span id="chrisTotal">0</span></div>
-      <div>Pat: $<span id="patTotal">0</span></div>
-    </div>
+    <div class="totals" id="totals"></div>
   </div>
 
 </div>
