@@ -1,14 +1,14 @@
 let items = [];
 let members = [];
 
-function setMembers() {
+function setMembers() {//set ang members og save it,inputs
 
   const input = document.getElementById("membersInput").value;
 
   members = input
     .split(",")
-    .map(name => name.trim())
-    .filter(name => name !== "");
+    .map(name => name.trim())//tanggal extra spaces
+    .filter(name => name !== "");//tanggal empty names
 
   if (members.length === 0) {
     alert("Enter at least one member");
@@ -137,22 +137,22 @@ function render() {
 
     row.className = "row";
 
-    row.textContent =
+    row.textContent =//para sa resibo
       `${item.name} - $${item.price}`;
 
     itemsDiv.appendChild(row);
 
-    // Split among selected payers
-    const split =
+    // computations sa pag tunga2
+    const tunga2 =
       item.price / item.payers.length;
 
     item.payers.forEach(member => {
 
-      totals[member] += split;
+      totals[member] += tunga2;
 
       lists[member].innerHTML += `
         <div>
-          ${item.name}: $${split.toFixed(2)}
+          ${item.name}: $${tunga2.toFixed(2)}
         </div>
       `;
     });
