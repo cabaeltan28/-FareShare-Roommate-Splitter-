@@ -21,58 +21,78 @@ function setMembers() {
 
 function generateOptions() {
 
-  const select = document.getElementById("itemType");
+  const payerOptions =
+    document.getElementById("payerOptions");
 
-  select.innerHTML = "";
+  payerOptions.innerHTML = "";
 
-  // Shared option
-  const sharedOption = document.createElement("option");
-  sharedOption.value = "shared";
-  sharedOption.textContent = "Shared";
-  select.appendChild(sharedOption);
-
-  // Dynamic member options
   members.forEach(member => {
 
-    const option = document.createElement("option");
+    const label = document.createElement("label");
 
-    option.value = member;
-    option.textContent = `${member} only`;
+    label.className = "checkbox-label";
 
-    select.appendChild(option);
+    label.innerHTML = `
+      <input type="checkbox" value="${member}">
+      ${member}
+    `;
+
+    payerOptions.appendChild(label);
   });
 }
 
 function addItem() {
 
-  const name = document.getElementById("itemName").value;
+  const name =
+    document.getElementById("itemName").value;
 
   const price = parseFloat(
     document.getElementById("itemPrice").value
   );
 
-  const type = document.getElementById("itemType").value;
+  // Get checked members
+  const checkedBoxes =
+    document.querySelectorAll(
+      "#payerOptions input:checked"
+    );
+
+  const selectedMembers =
+    Array.from(checkedBoxes).map(
+      box => box.value
+    );
 
   if (!name || isNaN(price)) {
     alert("Enter valid item and price");
     return;
   }
 
+  if (selectedMembers.length === 0) {
+    alert("Select at least one payer");
+    return;
+  }
+
   items.push({
     name,
     price,
-    type
+    payers: selectedMembers
   });
 
   document.getElementById("itemName").value = "";
   document.getElementById("itemPrice").value = "";
+
+  // Uncheck all
+  checkedBoxes.forEach(box => {
+    box.checked = false;
+  });
 
   render();
 }
 
 function render() {
 
-  const itemsDiv = document.getElementById("items");
+  const itemsDiv =
+    document.getElementById("items");
+
   const memberColumns =
     document.getElementById("memberColumns");
 
@@ -96,6 +116,7 @@ function render() {
   members.forEach(member => {
 
     const col = document.createElement("div");
+
     col.className = "col";
 
     col.innerHTML = `
@@ -117,36 +138,24 @@ function render() {
     row.className = "row";
 
     row.textContent =
-      `${item.name} - $${item.price} (${item.type})`;
+      `${item.name} - $${item.price}`;
 
     itemsDiv.appendChild(row);
 
-    // Shared
-    if (item.type === "shared") {
+    // Split among selected payers
+    const split =
+      item.price / item.payers.length;
 
-      const split = item.price / members.length;
+    item.payers.forEach(member => {
 
-      members.forEach(member => {
+      totals[member] += split;
 
-        totals[member] += split;
-
-        lists[member].innerHTML += `
-          <div>
-            ${item.name}: $${split.toFixed(2)}
-          </div>
-        `;
-      });
-
-    } else {
-
-      totals[item.type] += item.price;
-
-      lists[item.type].innerHTML += `
+      lists[member].innerHTML += `
         <div>
-          ${item.name}: $${item.price.toFixed(2)}
+          ${item.name}: $${split.toFixed(2)}
         </div>
       `;
-    }
+    });
   });
 
   // Show totals
